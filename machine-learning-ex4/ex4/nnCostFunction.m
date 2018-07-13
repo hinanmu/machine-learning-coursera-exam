@@ -62,6 +62,7 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+%part1
 a1 = [ones(m, 1), X];
 
 z2 = a1 * Theta1';
@@ -77,11 +78,36 @@ J = 1 / m * sum(sum(-(y == labels_vec) .* log(h) - (1 - (y == labels_vec)) .* lo
 
 
 
+%part2
+for t = 1:m
+  
+  %step1
+  a1 = [1, X(t, :)];
+  z2 = a1 * Theta1';
+  a2 = sigmoid(z2);
+  a2 = [1, a2];
+  z3 = a2 * Theta2';
+  a3 = sigmoid(z3)';
+  
+  %step2
+  ytVec = (y(t) == labels_vec)';
+  delta3 = a3 - ytVec;
+  
+  %step3
+  delta2 = Theta2' * delta3 .* [1;sigmoidGradient(z2')];
+  delta2 = delta2(2:end);
+  
+  %step4
+  Theta2_grad = Theta2_grad + delta3 * a2;
+  Theta1_grad = Theta1_grad + delta2 * a1;
+  
+endfor
 
 
-
-
-
+Theta1(:, 1) = 0;
+Theta2(:, 1) = 0;
+Theta2_grad = 1 / m * Theta2_grad + lambda / m * Theta2;
+Theta1_grad = 1 / m * Theta1_grad + lambda / m * Theta1;
 
 
 
