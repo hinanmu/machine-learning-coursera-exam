@@ -26,9 +26,17 @@ centroids = zeros(K, n);
 % Note: You can use a for-loop over the centroids to compute this.
 %
 
+cluster_size = zeros(K, 1);
+cluster_total_weight = zeros(K, n);
 
+for i = 1:m
+  cluster_size(idx(i)) = cluster_size(idx(i)) + 1;
+  cluster_total_weight(idx(i), :) = cluster_total_weight(idx(i), :) + X(i, :);
+endfor
 
-
+for j = 1:K
+  centroids(j, :) = cluster_total_weight(j, :) ./ cluster_size(j);
+endfor
 
 
 
